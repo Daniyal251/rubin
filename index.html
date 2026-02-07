@@ -445,6 +445,101 @@ footer{
   .pricing-section{padding:5rem 1.2rem}
   nav{padding:1rem 1.2rem}
 }
+
+/* ─── MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+  padding:1.5rem;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);opacity:1}
+
+.modal-box{
+  background:#111;border:1px solid var(--c-border);border-radius:20px;
+  width:100%;max-width:460px;padding:2.5rem 2rem 2rem;
+  position:relative;
+  transform:translateY(20px) scale(.97);opacity:0;
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+}
+.modal-close{
+  position:absolute;top:1rem;right:1.2rem;
+  background:none;border:none;color:var(--c-muted);font-size:1.5rem;
+  cursor:pointer;transition:color .3s;line-height:1;
+}
+.modal-close:hover{color:var(--c-text)}
+
+.modal-title{
+  font-family:var(--font-display);font-size:2rem;letter-spacing:.04em;
+  margin-bottom:.4rem;
+}
+.modal-sub{font-size:.85rem;color:var(--c-muted);font-weight:300;margin-bottom:2rem}
+
+.modal-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem}
+.modal-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;border-radius:14px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--c-border);
+  text-decoration:none;color:var(--c-text);
+  transition:all .3s;cursor:pointer;
+}
+.modal-opt:hover{border-color:rgba(255,77,28,0.3);background:rgba(255,77,28,0.04);transform:translateX(4px)}
+.modal-opt-icon{
+  width:44px;height:44px;min-width:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.modal-opt-icon.phone{background:rgba(255,77,28,0.1)}
+.modal-opt-icon.tg{background:rgba(0,136,204,0.1)}
+.modal-opt-icon.wa{background:rgba(37,211,102,0.1)}
+.modal-opt-icon.vk{background:rgba(0,119,255,0.1)}
+.modal-opt-text{display:flex;flex-direction:column}
+.modal-opt-name{font-size:.9rem;font-weight:600}
+.modal-opt-hint{font-size:.72rem;color:var(--c-muted);font-weight:300;margin-top:1px}
+
+.modal-divider{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:1.5rem;
+}
+.modal-divider::before,.modal-divider::after{
+  content:'';flex:1;height:1px;background:var(--c-border);
+}
+.modal-divider span{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--c-dim)}
+
+.modal-form{display:flex;flex-direction:column;gap:.75rem}
+.modal-input{
+  padding:14px 16px;border-radius:12px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--c-border);
+  color:var(--c-text);font-family:var(--font-body);font-size:.88rem;
+  outline:none;transition:border-color .3s;
+}
+.modal-input::placeholder{color:var(--c-dim)}
+.modal-input:focus{border-color:rgba(255,77,28,0.4)}
+select.modal-input{
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+  cursor:pointer;color:var(--c-text);
+}
+select.modal-input option{
+  background:#1a1a1a;color:#f0ede8;padding:10px;
+}
+.modal-submit{
+  padding:15px;border-radius:100px;border:none;
+  background:var(--c-accent);color:#fff;
+  font-family:var(--font-body);font-size:.85rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;margin-top:.25rem;
+}
+.modal-submit:hover{background:var(--c-accent2);transform:scale(1.02)}
+.modal-success{
+  display:none;text-align:center;padding:2rem 0;
+}
+.modal-success.show{display:block}
+.modal-success-icon{font-size:3rem;margin-bottom:1rem}
+.modal-success-text{font-family:var(--font-display);font-size:1.5rem;margin-bottom:.4rem}
+.modal-success-sub{font-size:.85rem;color:var(--c-muted);font-weight:300}
 </style>
 </head>
 <body>
@@ -459,7 +554,7 @@ footer{
     <a href="#pricing">Цены</a>
     <a href="#about">О клубе</a>
     <a href="#contact">Контакты</a>
-    <a href="tel:+79093100931" class="nav-cta">Записаться</a>
+    <button class="nav-cta" onclick="openModal()">Записаться</button>
   </div>
   <button class="menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button>
 </nav>
@@ -476,7 +571,7 @@ footer{
       <h1>ТРЕНИРУЙСЯ<br>С&nbsp;<em>ЛУЧШИМИ</em></h1>
       <p class="hero-desc">Два этажа оборудования SkyFit, профессиональные тренеры с соревновательным опытом и всё для серьёзных результатов.</p>
       <div class="hero-actions">
-        <a href="tel:+79093100931" class="btn-pill btn-fill">Записаться на тренировку →</a>
+        <button class="btn-pill btn-fill" onclick="openModal()">Записаться на тренировку →</button>
         <a href="#pricing" class="btn-pill btn-outline">Абонементы</a>
       </div>
     </div>
@@ -581,7 +676,7 @@ footer{
           <li>Раздевалки и душ</li>
           <li>Wi-Fi</li>
         </ul>
-        <a href="tel:+79093100931" class="btn-pill btn-outline">Подробнее</a>
+        <button class="btn-pill btn-outline" onclick="openModal()">Подробнее</button>
       </div>
 
       <div class="p-card pop" data-reveal="delay1">
@@ -594,7 +689,7 @@ footer{
           <li>Фито-бар</li>
           <li>Бесплатная парковка</li>
         </ul>
-        <a href="tel:+79093100931" class="btn-pill btn-fill">Записаться</a>
+        <button class="btn-pill btn-fill" onclick="openModal()">Записаться</button>
       </div>
 
       <div class="p-card" data-reveal="delay2">
@@ -607,7 +702,7 @@ footer{
           <li>Акции и спецпредложения</li>
           <li>Персональные скидки</li>
         </ul>
-        <a href="tel:+79093100931" class="btn-pill btn-outline">Подробнее</a>
+        <button class="btn-pill btn-outline" onclick="openModal()">Подробнее</button>
       </div>
     </div>
 
@@ -726,6 +821,71 @@ footer{
   </div>
 </section>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div id="modalContent">
+      <div class="modal-title">ЗАПИСАТЬСЯ</div>
+      <div class="modal-sub">Выберите удобный способ связи или оставьте заявку</div>
+
+      <div class="modal-options">
+        <a href="tel:+79093100931" class="modal-opt">
+          <div class="modal-opt-icon phone">📞</div>
+          <div class="modal-opt-text">
+            <div class="modal-opt-name">Позвонить</div>
+            <div class="modal-opt-hint">+7 (909) 310-09-31</div>
+          </div>
+        </a>
+        <a href="https://t.me/+79093100931" target="_blank" class="modal-opt">
+          <div class="modal-opt-icon tg">✈️</div>
+          <div class="modal-opt-text">
+            <div class="modal-opt-name">Telegram</div>
+            <div class="modal-opt-hint">Написать в мессенджер</div>
+          </div>
+        </a>
+        <a href="https://wa.me/79093100931" target="_blank" class="modal-opt">
+          <div class="modal-opt-icon wa">💬</div>
+          <div class="modal-opt-text">
+            <div class="modal-opt-name">WhatsApp</div>
+            <div class="modal-opt-hint">Написать в мессенджер</div>
+          </div>
+        </a>
+        <a href="https://vk.com/rubingym" target="_blank" class="modal-opt">
+          <div class="modal-opt-icon vk">🌐</div>
+          <div class="modal-opt-text">
+            <div class="modal-opt-name">ВКонтакте</div>
+            <div class="modal-opt-hint">Группа клуба</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="modal-divider"><span>или оставьте заявку</span></div>
+
+      <div class="modal-form" id="modalForm">
+        <input class="modal-input" type="text" id="formName" placeholder="Ваше имя" required>
+        <input class="modal-input" type="tel" id="formPhone" placeholder="Телефон" required>
+        <select class="modal-input" id="formGoal">
+          <option value="" disabled selected style="color:#6b6b6b">Цель тренировок</option>
+          <option>Набор массы</option>
+          <option>Похудение</option>
+          <option>Поддержание формы</option>
+          <option>Подготовка к соревнованиям</option>
+          <option>Просто хочу начать</option>
+        </select>
+        <button class="modal-submit" onclick="submitForm()">Отправить заявку</button>
+      </div>
+    </div>
+
+    <div class="modal-success" id="modalSuccess">
+      <div class="modal-success-icon">🔥</div>
+      <div class="modal-success-text">ЗАЯВКА ОТПРАВЛЕНА!</div>
+      <div class="modal-success-sub">Мы перезвоним вам в ближайшее время</div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -761,6 +921,35 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
   });
 });
+
+// Modal
+const modal=document.getElementById('modal');
+function openModal(){
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+  // Reset state
+  document.getElementById('modalContent').style.display='block';
+  document.getElementById('modalSuccess').classList.remove('show');
+}
+function closeModal(){
+  modal.classList.remove('open');
+  document.body.style.overflow='';
+}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+function submitForm(){
+  const name=document.getElementById('formName').value.trim();
+  const phone=document.getElementById('formPhone').value.trim();
+  if(!name||!phone){
+    document.getElementById('formName').style.borderColor=name?'':'rgba(255,77,28,0.6)';
+    document.getElementById('formPhone').style.borderColor=phone?'':'rgba(255,77,28,0.6)';
+    return;
+  }
+  document.getElementById('modalContent').style.display='none';
+  document.getElementById('modalSuccess').classList.add('show');
+  setTimeout(closeModal,2500);
+}
 </script>
 </body>
 </html>
