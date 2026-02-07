@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUBIN GYM — Набережные Челны</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --c-bg:#050505;
+  --c-surface:#0c0c0c;
+  --c-card:rgba(255,255,255,0.03);
+  --c-border:rgba(255,255,255,0.06);
+  --c-accent:#FF4D1C;
+  --c-accent2:#FF7A33;
+  --c-text:#f0ede8;
+  --c-muted:#6b6b6b;
+  --c-dim:#3a3a3a;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --r:16px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--c-dim) transparent}
+body{font-family:var(--font-body);background:var(--c-bg);color:var(--c-text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ─── CURSOR GLOW ─── */
+.cursor-glow{
+  position:fixed;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,77,28,0.07) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  transform:translate(-50%,-50%);
+  transition:left .6s cubic-bezier(.16,1,.3,1),top .6s cubic-bezier(.16,1,.3,1);
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.2rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:all .4s;
+}
+nav.solid{background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--c-border)}
+.nav-logo{
+  font-family:var(--font-display);font-size:1.6rem;letter-spacing:.08em;
+  color:var(--c-text);text-decoration:none;display:flex;align-items:center;gap:10px;
+}
+.nav-logo .dot{width:8px;height:8px;background:var(--c-accent);border-radius:50%;display:inline-block}
+.nav-links{display:flex;gap:2.5rem;align-items:center}
+.nav-links a{
+  font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--c-muted);text-decoration:none;transition:color .3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;
+  background:var(--c-accent);transition:width .3s;
+}
+.nav-links a:hover{color:var(--c-text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{
+  padding:10px 28px;background:var(--c-accent);color:#fff;
+  border:none;border-radius:100px;font-family:var(--font-body);
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;transition:all .3s;
+}
+.nav-cta:hover{background:var(--c-accent2);transform:scale(1.04)}
+.menu-btn{display:none;background:none;border:none;color:var(--c-text);font-size:1.5rem;cursor:pointer}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;display:flex;align-items:flex-end;
+  position:relative;padding:0 2rem 4rem;overflow:hidden;
+}
+.hero-bg-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--font-display);font-size:clamp(18vw,22vw,28rem);
+  letter-spacing:-.02em;color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.03);
+  white-space:nowrap;pointer-events:none;user-select:none;
+}
+.hero-glow{
+  position:absolute;top:15%;right:10%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(255,77,28,0.15) 0%,transparent 65%);
+  filter:blur(60px);pointer-events:none;
+}
+.hero-glow2{
+  position:absolute;bottom:10%;left:5%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,122,51,0.08) 0%,transparent 65%);
+  filter:blur(80px);pointer-events:none;
+}
+
+.hero-content{
+  position:relative;max-width:1400px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1.4fr 1fr;gap:3rem;align-items:end;
+}
+.hero-main{padding-bottom:2rem}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--c-accent);margin-bottom:2rem;
+}
+.hero-eyebrow span{width:24px;height:1px;background:var(--c-accent)}
+
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(4rem,9vw,9rem);
+  line-height:.88;letter-spacing:-.01em;
+  margin-bottom:1.5rem;
+}
+.hero h1 em{
+  font-style:italic;color:var(--c-accent);
+  position:relative;
+}
+.hero h1 em::after{
+  content:'';position:absolute;bottom:.08em;left:0;right:0;
+  height:3px;background:var(--c-accent);opacity:.4;
+}
+
+.hero-desc{
+  font-size:1.05rem;font-weight:300;color:var(--c-muted);
+  line-height:1.7;max-width:480px;margin-bottom:2.5rem;
+}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.btn-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:16px 40px;border-radius:100px;
+  font-family:var(--font-body);font-size:.85rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
+  cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);
+}
+.btn-fill{background:var(--c-accent);color:#fff;border:none}
+.btn-fill:hover{background:var(--c-accent2);transform:translateY(-2px);box-shadow:0 16px 48px rgba(255,77,28,0.3)}
+.btn-outline{background:transparent;color:var(--c-text);border:1.5px solid var(--c-border)}
+.btn-outline:hover{border-color:var(--c-accent);color:var(--c-accent)}
+
+/* hero cards stack */
+.hero-cards{display:flex;flex-direction:column;gap:1rem}
+.hero-card{
+  padding:1.8rem 2rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--c-border);
+  border-radius:var(--r);
+  backdrop-filter:blur(16px);
+  transition:all .4s;
+  cursor:default;
+}
+.hero-card:hover{
+  border-color:rgba(255,77,28,0.25);
+  background:rgba(255,77,28,0.03);
+  transform:translateX(8px);
+}
+.hc-num{
+  font-family:var(--font-display);font-size:2.6rem;
+  color:var(--c-accent);line-height:1;margin-bottom:.15rem;
+}
+.hc-label{font-size:.8rem;color:var(--c-muted);font-weight:400}
+
+/* scroll hint */
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.scroll-hint span{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--c-dim)}
+.scroll-mouse{
+  width:20px;height:32px;border:1.5px solid var(--c-dim);border-radius:12px;
+  position:relative;
+}
+.scroll-mouse::after{
+  content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  width:3px;height:8px;background:var(--c-accent);border-radius:3px;
+  animation:scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim{
+  0%,100%{transform:translateX(-50%) translateY(0);opacity:1}
+  50%{transform:translateX(-50%) translateY(8px);opacity:0}
+}
+
+/* ─── MARQUEE ─── */
+.marquee{
+  overflow:hidden;padding:2rem 0;border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border);
+  background:var(--c-surface);
+}
+.marquee-track{
+  display:flex;gap:3rem;animation:marquee 25s linear infinite;white-space:nowrap;
+}
+.marquee-item{
+  font-family:var(--font-display);font-size:1.5rem;letter-spacing:.1em;
+  color:var(--c-dim);display:flex;align-items:center;gap:1.5rem;
+}
+.marquee-item .sep{width:6px;height:6px;background:var(--c-accent);border-radius:50%;flex-shrink:0}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── SECTION COMMON ─── */
+.section{padding:8rem 2rem;max-width:1400px;margin:0 auto}
+.section-dark{background:var(--c-surface)}
+.section-head{margin-bottom:4rem}
+.section-label{
+  font-size:.65rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--c-accent);margin-bottom:1rem;display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';width:20px;height:1.5px;background:var(--c-accent)}
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  line-height:.95;letter-spacing:-.01em;
+}
+.section-title em{font-style:italic;color:var(--c-accent)}
+
+/* ─── FEATURES BENTO ─── */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:1rem;
+}
+.bento-card{
+  padding:2.5rem 2rem;
+  background:var(--c-card);
+  border:1px solid var(--c-border);
+  border-radius:var(--r);
+  position:relative;overflow:hidden;
+  transition:all .4s;
+}
+.bento-card:hover{border-color:rgba(255,77,28,0.2);transform:translateY(-3px)}
+.bento-card.wide{grid-column:span 2}
+.bento-card.tall{grid-row:span 2}
+
+.bc-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(255,77,28,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:1.5rem;
+  transition:all .3s;
+}
+.bento-card:hover .bc-icon{background:var(--c-accent);transform:rotate(-5deg) scale(1.05)}
+.bc-title{
+  font-family:var(--font-display);font-size:1.5rem;
+  letter-spacing:.04em;margin-bottom:.5rem;
+}
+.bc-desc{font-size:.85rem;color:var(--c-muted);line-height:1.65;font-weight:300}
+
+.bc-accent-line{
+  position:absolute;bottom:0;left:2rem;right:2rem;height:2px;
+  background:linear-gradient(90deg,var(--c-accent),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.bento-card:hover .bc-accent-line{opacity:1}
+
+/* ─── PRICING ─── */
+.pricing-section{padding:8rem 2rem;background:var(--c-surface);position:relative}
+.pricing-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,77,28,0.25),transparent);
+}
+.pricing-inner{max-width:1400px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+
+.p-card{
+  border:1px solid var(--c-border);border-radius:var(--r);
+  padding:3rem 2.2rem;position:relative;overflow:hidden;
+  background:var(--c-card);transition:all .4s;
+  display:flex;flex-direction:column;
+}
+.p-card:hover{border-color:rgba(255,77,28,0.15);transform:translateY(-4px)}
+.p-card.pop{
+  border-color:var(--c-accent);
+  background:linear-gradient(165deg,rgba(255,77,28,0.06) 0%,transparent 40%);
+}
+.p-card.pop::before{
+  content:'★ ХИТ';position:absolute;top:1.5rem;right:1.5rem;
+  font-size:.6rem;font-weight:700;letter-spacing:.15em;
+  color:#000;background:var(--c-accent);padding:5px 14px;border-radius:100px;
+}
+
+.p-type{
+  font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--c-muted);margin-bottom:1.5rem;
+}
+.p-price{
+  font-family:var(--font-display);font-size:3.5rem;line-height:1;
+  margin-bottom:.2rem;
+}
+.p-price small{font-size:1rem;color:var(--c-muted)}
+.p-note{font-size:.78rem;color:var(--c-muted);margin-bottom:2rem;font-weight:300}
+.p-list{list-style:none;margin-bottom:2.5rem;flex-grow:1}
+.p-list li{
+  font-size:.85rem;color:var(--c-muted);padding:.6rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  display:flex;align-items:center;gap:10px;
+}
+.p-list li::before{
+  content:'';width:5px;height:5px;background:var(--c-accent);border-radius:50%;flex-shrink:0;
+}
+.p-card .btn-pill{width:100%;justify-content:center}
+
+.pay-methods{
+  display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2.5rem;
+}
+.pay-tag{
+  padding:6px 16px;border-radius:100px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--c-border);
+  font-size:.7rem;color:var(--c-muted);font-weight:400;
+}
+
+/* ─── ABOUT SPLIT ─── */
+.about-split{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+}
+.about-text p{
+  font-size:.95rem;color:var(--c-muted);line-height:1.75;font-weight:300;margin-bottom:1rem;
+}
+.about-badges{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:2rem}
+.about-badge{
+  padding:1.3rem 1.2rem;border-radius:var(--r);
+  background:var(--c-card);border:1px solid var(--c-border);
+  transition:all .3s;
+}
+.about-badge:hover{border-color:rgba(255,77,28,0.2)}
+.ab-icon{font-size:1.2rem;margin-bottom:.5rem}
+.ab-title{font-family:var(--font-display);font-size:1rem;letter-spacing:.05em;margin-bottom:.15rem}
+.ab-desc{font-size:.72rem;color:var(--c-muted);font-weight:300}
+
+.about-visual-box{
+  position:relative;width:100%;aspect-ratio:3/4;
+  border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(145deg,#111,#1a1a1a);
+  border:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:center;
+}
+.avb-bg-letter{
+  font-family:var(--font-display);font-size:20rem;
+  color:rgba(255,77,28,0.04);position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  line-height:1;
+}
+.avb-quote{
+  position:relative;z-index:1;text-align:center;padding:2rem;
+}
+.avb-quote blockquote{
+  font-family:var(--font-display);font-size:2.2rem;line-height:1.15;
+  letter-spacing:.02em;margin-bottom:1rem;
+}
+.avb-quote blockquote em{font-style:italic;color:var(--c-accent)}
+.avb-quote cite{font-size:.75rem;color:var(--c-muted);letter-spacing:.15em;text-transform:uppercase;font-style:normal}
+.avb-ring{
+  position:absolute;top:50%;left:50%;
+  width:250px;height:250px;border-radius:50%;
+  border:1px solid rgba(255,77,28,0.08);
+  transform:translate(-50%,-50%);
+}
+.avb-ring2{
+  position:absolute;top:50%;left:50%;
+  width:350px;height:350px;border-radius:50%;
+  border:1px solid rgba(255,77,28,0.04);
+  transform:translate(-50%,-50%);
+}
+
+/* ─── AMENITIES PILLS ─── */
+.amenities-wrap{
+  display:flex;flex-wrap:wrap;gap:.6rem;margin-top:3rem;
+}
+.am-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 24px;border-radius:100px;
+  background:var(--c-card);border:1px solid var(--c-border);
+  font-size:.82rem;color:var(--c-muted);font-weight:400;
+  transition:all .3s;cursor:default;
+}
+.am-pill:hover{border-color:rgba(255,77,28,0.25);color:var(--c-text);background:rgba(255,77,28,0.04)}
+
+/* ─── CONTACT ─── */
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;
+}
+.contact-info{display:flex;flex-direction:column;gap:2rem}
+.ci-item{display:flex;gap:16px;align-items:flex-start}
+.ci-icon{
+  width:50px;height:50px;min-width:50px;border-radius:14px;
+  background:rgba(255,77,28,0.06);border:1px solid rgba(255,77,28,0.12);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.ci-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-muted);margin-bottom:.2rem;font-weight:500}
+.ci-value{font-size:1rem;font-weight:500}
+.ci-value a{color:var(--c-text);text-decoration:none;transition:color .3s}
+.ci-value a:hover{color:var(--c-accent)}
+
+.contact-map-wrap{
+  width:100%;aspect-ratio:1;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--c-border);position:relative;
+}
+.contact-map-wrap iframe{
+  width:100%;height:100%;border:0;
+  filter:grayscale(1) brightness(0.55) contrast(1.3);
+  transition:filter .5s;
+}
+.contact-map-wrap:hover iframe{filter:grayscale(.4) brightness(.7) contrast(1.15)}
+
+/* ─── FOOTER ─── */
+footer{
+  padding:2.5rem 2rem;border-top:1px solid var(--c-border);
+}
+.footer-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+}
+.footer-copy{font-size:.72rem;color:var(--c-dim);font-weight:300}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{
+  font-size:.72rem;color:var(--c-muted);text-decoration:none;
+  letter-spacing:.06em;transition:color .3s;
+}
+.footer-links a:hover{color:var(--c-accent)}
+
+/* ─── REVEAL ─── */
+[data-reveal]{opacity:0;transform:translateY(24px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+[data-reveal].in{opacity:1;transform:translateY(0)}
+[data-reveal="delay1"]{transition-delay:.1s}
+[data-reveal="delay2"]{transition-delay:.2s}
+[data-reveal="delay3"]{transition-delay:.3s}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .hero-content{grid-template-columns:1fr;gap:2rem}
+  .hero-cards{flex-direction:row;flex-wrap:wrap}
+  .hero-card{flex:1;min-width:160px}
+  .bento{grid-template-columns:1fr 1fr}
+  .bento-card.wide{grid-column:span 1}
+  .pricing-grid{grid-template-columns:1fr 1fr}
+  .about-split{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .nav-links{display:none}
+  .menu-btn{display:block}
+  .hero h1{font-size:clamp(3rem,12vw,5rem)}
+  .bento{grid-template-columns:1fr}
+  .bento-card.wide,.bento-card.tall{grid-column:span 1;grid-row:span 1}
+  .pricing-grid{grid-template-columns:1fr}
+  .hero-cards{flex-direction:column}
+  .hero-actions{flex-direction:column;width:100%}
+  .hero-actions .btn-pill{width:100%;justify-content:center}
+  .about-badges{grid-template-columns:1fr}
+  .section{padding:5rem 1.2rem}
+  .pricing-section{padding:5rem 1.2rem}
+  nav{padding:1rem 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="glow"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo"><span class="dot"></span> RUBIN GYM</a>
+  <div class="nav-links">
+    <a href="#features">Залы</a>
+    <a href="#pricing">Цены</a>
+    <a href="#about">О клубе</a>
+    <a href="#contact">Контакты</a>
+    <a href="tel:+79093100931" class="nav-cta">Записаться</a>
+  </div>
+  <button class="menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">RUBIN</div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-content">
+    <div class="hero-main">
+      <div class="hero-eyebrow"><span></span> Набережные Челны · с 2014</div>
+      <h1>ТРЕНИРУЙСЯ<br>С&nbsp;<em>ЛУЧШИМИ</em></h1>
+      <p class="hero-desc">Два этажа оборудования SkyFit, профессиональные тренеры с соревновательным опытом и всё для серьёзных результатов.</p>
+      <div class="hero-actions">
+        <a href="tel:+79093100931" class="btn-pill btn-fill">Записаться на тренировку →</a>
+        <a href="#pricing" class="btn-pill btn-outline">Абонементы</a>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="hero-card">
+        <div class="hc-num">4.9</div>
+        <div class="hc-label">Рейтинг · 346 оценок</div>
+      </div>
+      <div class="hero-card">
+        <div class="hc-num">2 ЭТАЖА</div>
+        <div class="hc-label">Тренажёрного зала</div>
+      </div>
+      <div class="hero-card">
+        <div class="hc-num">от 400₽</div>
+        <div class="hc-label">Разовое посещение</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-mouse"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item">ТРЕНАЖЁРНЫЙ ЗАЛ <span class="sep"></span></div>
+    <div class="marquee-item">КАРДИО <span class="sep"></span></div>
+    <div class="marquee-item">ПЕРСОНАЛЬНЫЕ ТРЕНИРОВКИ <span class="sep"></span></div>
+    <div class="marquee-item">МАССАЖ <span class="sep"></span></div>
+    <div class="marquee-item">ФИТО-БАР <span class="sep"></span></div>
+    <div class="marquee-item">КОНСУЛЬТАЦИИ ПО ПИТАНИЮ <span class="sep"></span></div>
+    <div class="marquee-item">ПОДГОТОВКА К СОРЕВНОВАНИЯМ <span class="sep"></span></div>
+    <div class="marquee-item">ТРЕНАЖЁРНЫЙ ЗАЛ <span class="sep"></span></div>
+    <div class="marquee-item">КАРДИО <span class="sep"></span></div>
+    <div class="marquee-item">ПЕРСОНАЛЬНЫЕ ТРЕНИРОВКИ <span class="sep"></span></div>
+    <div class="marquee-item">МАССАЖ <span class="sep"></span></div>
+    <div class="marquee-item">ФИТО-БАР <span class="sep"></span></div>
+    <div class="marquee-item">КОНСУЛЬТАЦИИ ПО ПИТАНИЮ <span class="sep"></span></div>
+    <div class="marquee-item">ПОДГОТОВКА К СОРЕВНОВАНИЯМ <span class="sep"></span></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-head" data-reveal>
+    <div class="section-label">Что внутри</div>
+    <div class="section-title">ВСЁ ДЛЯ <em>РЕЗУЛЬТАТА</em></div>
+  </div>
+  <div class="bento">
+    <div class="bento-card wide" data-reveal>
+      <div class="bc-icon">🏋️</div>
+      <div class="bc-title">ТРЕНАЖЁРНЫЙ ЗАЛ</div>
+      <div class="bc-desc">Профессиональное оборудование SkyFit на двух этажах. Свободные веса, силовые рамы и станки для любых тренировочных задач — от первого дня в зале до подготовки к турниру.</div>
+      <div class="bc-accent-line"></div>
+    </div>
+    <div class="bento-card" data-reveal="delay1">
+      <div class="bc-icon">❤️‍🔥</div>
+      <div class="bc-title">КАРДИОЗАЛ</div>
+      <div class="bc-desc">Беговые дорожки, эллиптические и велотренажёры для эффективного жиросжигания.</div>
+      <div class="bc-accent-line"></div>
+    </div>
+    <div class="bento-card" data-reveal>
+      <div class="bc-icon">💪</div>
+      <div class="bc-title">ПЕРСОНАЛЬНЫЕ</div>
+      <div class="bc-desc">Индивидуальные программы от тренеров с соревновательным опытом. Бодибилдинг, пауэрлифтинг, функционал.</div>
+      <div class="bc-accent-line"></div>
+    </div>
+    <div class="bento-card" data-reveal="delay1">
+      <div class="bc-icon">🥗</div>
+      <div class="bc-title">ПИТАНИЕ</div>
+      <div class="bc-desc">Консультации по питанию: набор массы, сушка, поддержание. Фито-бар с напитками прямо в клубе.</div>
+      <div class="bc-accent-line"></div>
+    </div>
+    <div class="bento-card" data-reveal="delay2">
+      <div class="bc-icon">💆</div>
+      <div class="bc-title">МАССАЖ</div>
+      <div class="bc-desc">Спортивный и восстановительный — быстрее восстанавливайтесь между тренировками.</div>
+      <div class="bc-accent-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="section-head" data-reveal>
+      <div class="section-label">Абонементы</div>
+      <div class="section-title">ВЫБЕРИ <em>СВОЙ</em> ПЛАН</div>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="p-card" data-reveal>
+        <div class="p-type">Разовое</div>
+        <div class="p-price">400–500 <small>₽</small></div>
+        <div class="p-note">одна тренировка</div>
+        <ul class="p-list">
+          <li>Тренажёрный зал</li>
+          <li>Кардиозона</li>
+          <li>Раздевалки и душ</li>
+          <li>Wi-Fi</li>
+        </ul>
+        <a href="tel:+79093100931" class="btn-pill btn-outline">Подробнее</a>
+      </div>
+
+      <div class="p-card pop" data-reveal="delay1">
+        <div class="p-type">Месяц</div>
+        <div class="p-price">1 700 <small>₽/мес</small></div>
+        <div class="p-note">от 1 700 до 2 800 ₽</div>
+        <ul class="p-list">
+          <li>Безлимитные посещения</li>
+          <li>Все зоны клуба</li>
+          <li>Фито-бар</li>
+          <li>Бесплатная парковка</li>
+        </ul>
+        <a href="tel:+79093100931" class="btn-pill btn-fill">Записаться</a>
+      </div>
+
+      <div class="p-card" data-reveal="delay2">
+        <div class="p-type">Год</div>
+        <div class="p-price">11 000 <small>₽/год</small></div>
+        <div class="p-note">от 11 000 до 16 000 ₽</div>
+        <ul class="p-list">
+          <li>Все преимущества месячного</li>
+          <li>Лучшая цена за тренировку</li>
+          <li>Акции и спецпредложения</li>
+          <li>Персональные скидки</li>
+        </ul>
+        <a href="tel:+79093100931" class="btn-pill btn-outline">Подробнее</a>
+      </div>
+    </div>
+
+    <div class="pay-methods" data-reveal>
+      <div class="pay-tag">💳 Карта</div>
+      <div class="pay-tag">💵 Наличные</div>
+      <div class="pay-tag">📱 СБП</div>
+      <div class="pay-tag">📷 QR-код</div>
+      <div class="pay-tag">🏦 Перевод</div>
+      <div class="pay-tag">🌐 Онлайн</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-head" data-reveal>
+    <div class="section-label">О клубе</div>
+    <div class="section-title">ТРЕНИРУЙСЯ У&nbsp;<em>ЛУЧШИХ</em></div>
+  </div>
+  <div class="about-split">
+    <div class="about-text" data-reveal>
+      <p>Rubin Gym — сеть спортивных комплексов в Набережных Челнах с профессиональным тренерским составом и современным оборудованием. Наши тренеры готовят спортсменов к соревнованиям и помогают каждому достигать своих целей.</p>
+      <p>Два этажа тренажёрного зала, кардиозона, фито-бар, массажный кабинет и все условия для комфортных и результативных тренировок.</p>
+      <div class="about-badges">
+        <div class="about-badge">
+          <div class="ab-icon">🏆</div>
+          <div class="ab-title">PRO АТЛЕТЫ</div>
+          <div class="ab-desc">Тренеры с опытом соревнований</div>
+        </div>
+        <div class="about-badge">
+          <div class="ab-icon">🅿️</div>
+          <div class="ab-title">ПАРКОВКА</div>
+          <div class="ab-desc">Бесплатная у клуба</div>
+        </div>
+        <div class="about-badge">
+          <div class="ab-icon">📶</div>
+          <div class="ab-title">WI-FI</div>
+          <div class="ab-desc">По всему клубу</div>
+        </div>
+        <div class="about-badge">
+          <div class="ab-icon">🚲</div>
+          <div class="ab-title">ВЕЛО</div>
+          <div class="ab-desc">Велопарковка у входа</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual-box" data-reveal="delay1">
+      <div class="avb-bg-letter">R</div>
+      <div class="avb-ring"></div>
+      <div class="avb-ring2"></div>
+      <div class="avb-quote">
+        <blockquote>ТРЕНИРУЙСЯ<br>С ЛУЧШИМИ!<br><em>ТРЕНИРУЙСЯ<br>У ЛУЧШИХ!</em></blockquote>
+        <cite>— Rubin Gym</cite>
+      </div>
+    </div>
+  </div>
+
+  <div class="amenities-wrap" data-reveal>
+    <div class="am-pill">🚿 Душевые</div>
+    <div class="am-pill">🔑 Раздевалки</div>
+    <div class="am-pill">🅿️ Парковка</div>
+    <div class="am-pill">📶 Wi-Fi</div>
+    <div class="am-pill">🧃 Фито-бар</div>
+    <div class="am-pill">💆 Массаж</div>
+    <div class="am-pill">🕌 Намазхана</div>
+    <div class="am-pill">🚲 Велопарковка</div>
+    <div class="am-pill">♿ Пандус</div>
+    <div class="am-pill">💳 Оплата картой</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-dark" id="contact" style="background:var(--c-surface)">
+  <div class="section-head" data-reveal>
+    <div class="section-label">Контакты</div>
+    <div class="section-title">НАЧНИ <em>СЕГОДНЯ</em></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info" data-reveal>
+      <div class="ci-item">
+        <div class="ci-icon">📍</div>
+        <div>
+          <div class="ci-label">Адрес</div>
+          <div class="ci-value"><a href="https://yandex.com/maps/-/CPELnBLJ" target="_blank">бул. Главмосстроевцев, 1Б · Набережные Челны</a></div>
+        </div>
+      </div>
+      <div class="ci-item">
+        <div class="ci-icon">📞</div>
+        <div>
+          <div class="ci-label">Телефон</div>
+          <div class="ci-value"><a href="tel:+79093100931">+7 (909) 310-09-31</a></div>
+        </div>
+      </div>
+      <div class="ci-item">
+        <div class="ci-icon">🕐</div>
+        <div>
+          <div class="ci-label">Режим работы</div>
+          <div class="ci-value">Ежедневно до 22:00</div>
+        </div>
+      </div>
+      <div class="ci-item">
+        <div class="ci-icon">💬</div>
+        <div>
+          <div class="ci-label">Соц. сети</div>
+          <div class="ci-value">
+            <a href="https://vk.com/rubingym" target="_blank">VKontakte</a> &nbsp;·&nbsp;
+            <a href="https://instagram.com/rubingym" target="_blank">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-map-wrap" data-reveal="delay1">
+      <iframe src="https://yandex.ru/map-widget/v1/?ll=52.412160%2C55.748259&z=16&pt=52.412160%2C55.748259%2Cpm2rdm" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 RUBIN GYM · Набережные Челны</div>
+    <div class="footer-links">
+      <a href="https://vk.com/rubingym" target="_blank">VK</a>
+      <a href="https://instagram.com/rubingym" target="_blank">Instagram</a>
+      <a href="tel:+79093100931">+7 (909) 310-09-31</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Cursor glow
+const glow=document.getElementById('glow');
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+
+// Nav solid
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>60));
+
+// Reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}})
+},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('[data-reveal]').forEach(el=>obs.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
